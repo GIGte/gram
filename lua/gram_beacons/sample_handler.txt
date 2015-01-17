@@ -1,0 +1,71 @@
+
+--[[
+	This is an example file, where I tried to comment out all the
+	starndard parameters you can use in your beacons.
+	Everything is set to defaults (except BEACON.OnPoll - it is empty),
+	therefore omitted they will be just as they are here.
+]]
+
+BEACON.Label = nil -- an empty string has the same effect
+BEACON.Sprite = Gram.BeaconTextureID("be_square")
+BEACON.Color = color_white
+BEACON.Size = 10
+
+-- Set true to allow CMap (via Poll() method) to check the entity's position and angle.
+BEACON.ShouldPoll = false
+-- This means the beacon will remain drawn even if its position is out of the given radius.
+BEACON.ShouldRemain = false
+-- The scale for this beacon is important, so a renderer will try to keep its ratio.
+BEACON.ScaleDependent = false
+-- Should the beacon diminish if it is near the edge of the rendering area?
+BEACON.CanDiminish = true
+-- Should it be rotated?
+BEACON.CanRotate = false
+-- Is it needed to draw a field of view of the entity?
+BEACON.ShowViewDirection = false
+
+--[[ Note:
+	The two previous settings imply receiving an XY angle.
+	So if they are set to false, you don't need to return the
+	angles in BEACON:OnPoll() as a second value.
+]]
+
+-- Do we need to perform an additional rotation?
+--[[
+	It is used in this way:
+		beacon.rot = beacon.AngleOffset + beacon.Entity():GetAngles().Yaw
+]]
+BEACON.AngleOffset = 0
+
+BEACON.Priority = Gram.EPriority.Medium
+
+--[[
+	There are BEACON.pos and BEACON.rot parameters you
+	may want to use when creating a beacon which does not represent
+	a specific entity. You can do it like this:
+		Gram.Beacons.Create { pos = Vector(x, y, z), rot = angle }
+]]
+
+function BEACON:OnInitialize() -- always called
+	
+end
+
+-- That's what is done by default:
+function BEACON:OnPoll()
+	if IsValid(self.Entity) then
+		return self.Entity:GetPos(), self.Entity:GetAngles()
+	else
+		return false -- to remove the beacon, as its entity isn't valid anymore
+	end
+
+	--[[
+		In case of BEACON.ShouldPoll set to true:
+			If BEACON.Entity is set, then the preceding is done.
+			If the entity is not set, then BEACON:OnPoll() is called.
+	]]
+end
+
+-- If you need to animate the beacon somehow. Any beacon management is not allowed here!
+function BEACON:OnAnimate()
+	--self.Size = %some animaton code here%
+end

@@ -1,0 +1,46 @@
+
+--[[
+	The idea is that you build a table with zones you specify
+	using the almighty Lua, and then return it back to the loader.
+]]
+
+local zones = {
+	{
+		name = "My Awesome Location",
+			Vector(-3300, -4580, -350), Vector(-790, -2570, 170), -- minvector, maxvector
+		texture_id = Gram.OverviewTextureID_R(),
+		scale = 10.8, -- a distance that one pixel represents
+		pos_x = -7228, -- upper left point
+		pos_y = 6466,
+		rotate = false, -- should the map be rotated by a quater? mostly for CSS, so skip it
+		--zoom = 1.x, -- this parameter is for CSS, Gram doesn't use it by default; it changes a zoom level in CSS' radar
+		
+		-- Only one level of nesting (who would need more?)
+		-- Supposed that the subregions are inside the parent region
+		{
+			-- None of the paremeters is inherited, so you need to specify all of them.
+			...
+		},
+		
+		{
+			...
+		}
+		
+		...
+	},
+	
+	...
+	
+	{
+		name = "Ambient", -- "" and "Ambient" are supposed to be default
+			vector_origin, vector_origin, -- equal vertices mean "Stop here"
+		texture_id = Gram.OverviewTextureID_R(),
+		scale = 10.8,
+		pos_x = -7228,
+		pos_y = 6466,
+		
+		...
+	}
+}
+
+Gram.Overview.Return(zones)
