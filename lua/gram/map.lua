@@ -41,7 +41,7 @@ Gram.Map = object
 		CMap:SetRenderer(obj)
 		
 		CMap:SetupDraw(x, y, w, h)
-		CMap:Draw(target_pos, target_rot) : EyePos(), EyeAngles().Yaw - for example
+		CMap:Draw(target_pos, target_rot) : e.g. EyePos(), EyeAngles().Yaw
 ]]
 
 --------------------------------

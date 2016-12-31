@@ -118,6 +118,11 @@ object.__index = object
 
 function object:new()
 	return setmetatable({
+		_x = 0, _y = 0,
+		_w = 300, _h = 300,
+		
+		_distance = 1500,
+		_scale = 150/1500,
 		
 	}, self)
 end
@@ -274,8 +279,8 @@ function object:DrawBeacons(iterator)
 		if dw < 0 or dh < 0 then
 			if beacon.ShouldRemain then
 				overflow = true
-				dx = dw < 0 and (dx > 0 and dx - dw or dx + dw) or dx
-				dy = dh < 0 and (dy > 0 and dy - dh or dy + dh) or dy
+				dx = dw < 0 and (dx > 0 and dx + dw or dx - dw) or dx
+				dy = dh < 0 and (dy > 0 and dy + dh or dy - dh) or dy
 			else
 				continue
 			end

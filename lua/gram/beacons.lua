@@ -25,15 +25,15 @@ lib.Listener = object
 --[[ Exports:
 	Gram.Beacons.Create(handler_name, beacon_table) -> beacon
 	Gram.Beacons.Subscribe(listener) :
-		Tricky here, as the listeners are stored in a weak table,
-		so they are the subjects for a garbage collection.
+		Tricky here. Since the listeners are stored in a weak table,
+		they are subject to garbage collection.
 		Therefore you should store them somewhere.
 		
 		Saving a listener as a CMap's member is the suggested solution.
 		
 		Note: this is only necessary if you do not have any references to the
 		listener, that is you have a local variable which is used only in a
-		one place.
+		single place.
 	
 	Gram.Beacons.Listener.new() =>
 		CListener:GetMapObject() -> obj

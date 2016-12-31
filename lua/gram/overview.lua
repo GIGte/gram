@@ -161,7 +161,7 @@ end
 -- Utility functions		  --
 --------------------------------
 
-function lib.AA(entry) -- maybe something more meaningful?
+function lib.AA(entry)
 	return entry[1], entry[2]
 end
 
@@ -179,7 +179,7 @@ function lib.ClampPosition(entry, pos)
 	return pos
 end
 
-function lib.ClampPosition_IndentXY(entry, pos, indent) -- is it really indent?
+function lib.ClampPosition_IndentXY(entry, pos, indent)
 	local vec_a, vec_b = entry[1], entry[2]
 	
 	pos.x = math.Clamp(pos.x, vec_a.x + indent, vec_b.x - indent)
@@ -194,17 +194,16 @@ function lib.SizeXY(entry)
 	return size * entry.scale
 end
 
-function lib.ClampPositionSizeXY(entry, pos, size) -- something not good?
+function lib.ClampPositionSizeXY(entry, pos, size)
 	pos.x = math.Clamp(pos.x, entry.pos_x, entry.pos_x + size)
 	pos.y = math.Clamp(pos.y, entry.pos_y - size, entry.pos_y)
 	
 	return pos
 end
 
-function lib.ClampPositionSizeXY_IndentXY(entry, pos, size, indent) -- that name is awful, can it be shorter?
+function lib.ClampPositionSizeXY_IndentXY(entry, pos, size, indent)
 	pos.x = math.Clamp(pos.x, entry.pos_x + indent, entry.pos_x + size - indent)
 	pos.y = math.Clamp(pos.y, entry.pos_y - size + indent, entry.pos_y - indent)
 	
 	return pos
 end
--- D:
