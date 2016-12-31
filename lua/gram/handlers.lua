@@ -24,6 +24,7 @@ local lib = Gram
 	
 	Gram.StartHandlers()
 	Gram.StopHandlers()
+	Gram.ReloadHandlers([listener])
 	
 	Gram.EPriority =>
 		EPriority.Low
@@ -36,15 +37,13 @@ local lib = Gram
 --------------------------------
 
 local handler_meta = {
-	--Label = false,
+	Label = nil,
 	Sprite = Gram.BeaconTextureID("be_square"),
 	Color = color_white,
 	Size = 10,
 	
-	--[[x = 0,
-	y = 0,
-	z = 0,
-	ang = 0,]]
+	EntityClasses = nil,
+	ManualBeacons = nil,
 	
 	pos = vector_origin,
 	rot = 0,
@@ -61,8 +60,9 @@ local handler_meta = {
 	
 	OnInitialize = function() end,
 	OnPoll = function() end,
-	--OnUpdate = function() end,
 	OnAnimate = function() end,
+	
+	CheckEntity = nil,
 	
 	Create = function(self, beacon_table)
 		return Gram.Beacons.Create(self.HANDLER_NAME, beacon_table)
@@ -113,10 +113,20 @@ local function check(ent)
 	end
 end
 
-local function revive(handler)
-	if handler.ManualBeacons then return end
-	
+local function restore(handler)
 	local last = handler._lastent
+	
+	if handler.ManualBeacons then
+		if last then return end -- load them only once
+		if not istable(handler.ManualBeacons) then return end
+		
+		for k,v in pairs(handler.ManualBeacons) do
+			handler:Create(v)
+			handler._lastent = v
+		end
+		
+		return
+	end
 	
 	if handler.EntityClasses then
 		for k,v in pairs(ents.GetAll()) do
@@ -210,6 +220,8 @@ local function reload_to(handler, listener)
 end
 
 function handler_meta:Start()
+	if self.ManualBeacons then return end
+	
 	if next(ev_handlers) == nil and next(ev_handlers_col) == nil then
 		hook.Add("OnEntityCreated", "Gram_OnEntityCreated", check)
 	end
@@ -252,8 +264,8 @@ function handler_meta:Restart()
 	ev_handlers[""] = nil
 end
 
-function handler_meta:Revive() -- recover, renew, restore?
-	revive(self)
+function handler_meta:Restore()
+	restore(self)
 end
 
 function handler_meta:Reload()
@@ -288,7 +300,7 @@ end
 
 function lib.StartHandlers()
 	for k,v in pairs(lib.Handlers) do
-		v:Revive()
+		v:Restore()
 		v:Start()
 	end
 end
@@ -296,6 +308,16 @@ end
 function lib.StopHandlers()
 	for k,v in pairs(lib.Handlers) do
 		v:Stop()
+	end
+end
+
+function lib.ReloadHandlers(listener)
+	for k,v in pairs(lib.Handlers) do
+		if listener then
+			v:ReloadToListener(listener)
+		else
+			v:Reload()
+		end
 	end
 end
 
